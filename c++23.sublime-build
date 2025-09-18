@@ -1,0 +1,6 @@
+{
+    "cmd": "g++-15 -std=c++23 -O2 -Wno-vla-cxx-extension \"$file_name\" -o \"$file_base_name\" && ./$file_base_name < \"$file_path/inputf.in\" > \"$file_path/outputf.in\"",
+    "selector": "source.c, source.c++, source.cxx, source.cpp",
+    "shell": true,
+    "working_dir": "$file_path"
+}
