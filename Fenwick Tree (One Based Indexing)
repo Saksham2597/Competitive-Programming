@@ -2,9 +2,9 @@ struct FenwickTreeOneBasedIndexing {
     vector<int> bit;  // binary indexed tree
     int n;
 
-    FenwickTreeOneBasedIndexing(int n) {
-        this->n = n + 1;
-        bit.assign(n + 1, 0);
+    FenwickTreeOneBasedIndexing(int sz) {
+        n = sz + 1;
+        bit.assign(sz + 1, 0);
     }
 
     FenwickTreeOneBasedIndexing(vector<int> a)
