@@ -407,29 +407,22 @@ long long qry(int v, int tl, int tr, int l, int r){
 
 // DSU
 
-int parent[N], rnk[N];
-
+int parent[N], size[N];
 void make(int v){
-	parent[v] = v;
-	rnk[v] = 0;
+    parent[v] = v;
+    size[v] = 1;
 }
-
 int find(int v){
-	if(parent[v] != v)
-		parent[v] = find(parent[v]);
-	return parent[v];
+    if(parent[v]!=v) parent[v] = find(parent[v]);
+    return parent[v];
 }
-
-void Union(int a, int b){
-	a = find(a);
-	b = find(b);
-	if(a != b){
-		if(rnk[a] < rnk[b])
-			swap(a, b);
-		parent[b] = a;
-		if(rnk[a] == rnk[b])
-			rnk[a]++;
-	}
+void unite(int a, int b){
+    a = find(a), b = find(b);
+    if(a!=b){
+        if(size[a]<size[b]) swap(a, b);
+        parent[b] = a;
+        size[a] += size[b];
+    }
 }
 
 //    MST
