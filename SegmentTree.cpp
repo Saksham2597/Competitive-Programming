@@ -10,23 +10,20 @@ I like to visualize a segment tree in the following way: image link
 
 Notation is node_index: corresponding segment (left border included, right excluded). At the bottom row we have our array (0-indexed), the leaves of the tree. For now suppose it's length is a power of 2 (16 in the example), so we get perfect binary tree. When going up the tree we take pairs of nodes with indices (2 * i, 2 * i + 1) and combine their values in their parent with index i. This way when we're asked to find a sum on interval [3, 11), we need to sum up only values in the nodes 19, 5, 12 and 26 (marked with bold), not all 8 values inside the interval. Let's jump directly to implementation (in C++) to see how it works:
 
-const int N = 1e5;  // limit for array size
-int n;  // array size
+const int N = 1e5;
+int n;
 int t[2 * N];
-
-void build() {  // build the tree
-  for (int i = n - 1; i > 0; --i) t[i] = t[i<<1] + t[i<<1|1];
+void build(){
+  for(int i=n-1; i>0; i--) t[i] = t[i<<1]+t[i<<1|1];
 }
-
-void modify(int p, int value) {  // set value at position p
-  for (t[p += n] = value; p > 1; p >>= 1) t[p>>1] = t[p] + t[p^1];
+void modify(int p, int value){
+  for(t[p+=n]=value; p>1; p>>=1) t[p>>1] = t[p]+t[p^1];
 }
-
-int query(int l, int r) {  // sum on interval [l, r)
-  int res = 0;
-  for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-    if (l&1) res += t[l++];
-    if (r&1) res += t[--r];
+int query(int l, int r) {
+  int res=0;
+  for(l+=n, r+=n; l<r; l>>=1, r>>=1){
+    if(l&1) res += t[l++];
+    if(r&1) res += t[--r];
   }
   return res;
 }
