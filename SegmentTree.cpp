@@ -18,35 +18,36 @@ int query(int l, int r) {
 }
 
 Lazy Propagation:
-// ---- Problem-specific: redefine these 5 for each problem ----
+// ---- Problem-specific: redefine these for each problem ----
 struct Node {
-    // e.g. long long sum; or vector<int> f = vector<int>(20, 0);
+    // e.g. long long sum = 0;
 };
 struct Tag {
-    // e.g. long long val = 0;
     bool has_update = false;
+    // e.g. long long val = 0;
 };
 Node merge(const Node& l, const Node& r);
 void apply(Node& node, const Tag& tag, int len);
 void compose(Tag& parent, const Tag& child);
-// ----------------------------------------------------------------
+Node makeLeaf(long long val);   // single array value -> Node
+// -------------------------------------------------------------
 
 struct SegTree {
     int n;
     vector<Node> t;
     vector<Tag> lazy;
 
-    SegTree(int n_) : n(n_) {
-        int sz = 1;
-        while (sz < n) sz *= 2;   // next power of 2 >= n
-        t.assign(2 * sz, Node());
-        lazy.assign(2 * sz, Tag());
+    template<typename T>
+    SegTree(vector<T>& a) : n((int)a.size()) {
+        t.assign(4 * n, Node());
+        lazy.assign(4 * n, Tag());
+        if (n > 0) build(a, 1, 0, n - 1);
     }
 
     template<typename T>
     void build(vector<T>& a, int v, int tl, int tr) {
         if (tl == tr) {
-            t[v] = makeLeaf(a[tl]); // define this per-problem: single value -> Node
+            t[v] = makeLeaf(a[tl]);
             return;
         }
         int tm = (tl + tr) / 2;
@@ -82,6 +83,8 @@ struct SegTree {
         t[v] = merge(t[v*2], t[v*2+1]);
     }
 
+    void update(int l, int r, const Tag& tag) { update(1, 0, n-1, l, r, tag); }
+
     Node query(int v, int tl, int tr, int l, int r) {
         if (l == tl && r == tr) return t[v];
         push(v, tl, tr);
@@ -90,4 +93,6 @@ struct SegTree {
         if (l > tm) return query(v*2+1, tm+1, tr, l, r);
         return merge(query(v*2, tl, tm, l, tm), query(v*2+1, tm+1, tr, tm+1, r));
     }
+
+    Node query(int l, int r) { return query(1, 0, n-1, l, r); }
 };
